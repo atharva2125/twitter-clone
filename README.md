@@ -185,6 +185,73 @@ To complete the Twitter clone, you would need to implement:
 4. Push to the branch
 5. Create a Pull Request
 
+## Deployment on Render
+
+### Prerequisites for Deployment
+1. GitHub account
+2. Render account (free tier available)
+3. MongoDB Atlas account (for cloud database)
+
+### Steps to Deploy
+
+#### 1. Set up MongoDB Atlas
+1. Create a free MongoDB Atlas account at https://cloud.mongodb.com
+2. Create a new cluster
+3. Get your connection string (replace `<password>` with your actual password)
+4. Whitelist IP address `0.0.0.0/0` for Render deployment
+
+#### 2. Push to GitHub
+```bash
+# Your code is already committed locally
+# Create a new repository on GitHub, then:
+git remote add origin https://github.com/yourusername/twitter-clone.git
+git branch -M main
+git push -u origin main
+```
+
+#### 3. Deploy Backend on Render
+1. Go to https://render.com and sign up/login
+2. Click "New" → "Web Service"
+3. Connect your GitHub repository
+4. Configure the service:
+   - **Name**: `twitter-clone-backend`
+   - **Environment**: `Node`
+   - **Build Command**: `cd backend && npm install`
+   - **Start Command**: `cd backend && npm start`
+   - **Add Environment Variables**:
+     - `NODE_ENV`: `production`
+     - `MONGODB_URI`: Your MongoDB Atlas connection string
+     - `JWT_SECRET`: A secure random string (32+ characters)
+     - `PORT`: `10000` (Render default)
+
+#### 4. Deploy Frontend on Render
+1. Create another "Web Service"
+2. Configure:
+   - **Name**: `twitter-clone-frontend`
+   - **Environment**: `Static Site`
+   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Publish Directory**: `frontend/build`
+   - **Add Environment Variables**:
+     - `REACT_APP_API_URL`: `https://your-backend-service.onrender.com/api`
+
+#### 5. Update CORS Settings
+After deployment, update the CORS configuration in `backend/server.js`:
+```javascript
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-service.onrender.com']
+    : ['http://localhost:3000'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+```
+
+### Important Notes
+- Free tier services on Render may "spin down" after inactivity
+- First request after inactivity may take 30+ seconds
+- For production apps, consider upgrading to paid plans
+- The backend `.env` file is not committed to Git for security
+
 ## License
 
 This project is licensed under the ISC License.
