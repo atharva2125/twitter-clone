@@ -22,6 +22,9 @@ const Navbar: React.FC = () => {
           <Link to="/" style={linkStyle}>
             Home
           </Link>
+          <Link to="/search" style={linkStyle}>
+            Search
+          </Link>
           {user && (
             <Link to={`/profile/${user.username}`} style={linkStyle}>
               Profile

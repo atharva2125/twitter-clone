@@ -5,6 +5,7 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Home from './components/Home/Home';
 import Profile from './components/Profile/Profile';
+import Search from './components/Search/Search';
 import Navbar from './components/Layout/Navbar';
 import './App.css';
 
@@ -47,6 +48,14 @@ function App() {
                 <div className="main-layout">
                   <Navbar />
                   <Profile />
+                </div>
+              </PrivateRoute>
+            } />
+            <Route path="/search" element={
+              <PrivateRoute>
+                <div className="main-layout">
+                  <Navbar />
+                  <Search />
                 </div>
               </PrivateRoute>
             } />
