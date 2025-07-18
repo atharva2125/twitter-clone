@@ -35,18 +35,18 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Twitter Clone</h1>
-          <h2>Sign in to your account</h2>
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="bg-black border border-gray-800 rounded-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Twitter Clone</h1>
+          <h2 className="text-xl text-gray-400">Sign in to your account</h2>
         </div>
         
-        <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {error && <div className="bg-red-900 text-red-100 p-3 rounded border border-red-800">{error}</div>}
           
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
             <input
               type="email"
               id="email"
@@ -55,11 +55,12 @@ const Login: React.FC = () => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
+              className="twitter-input"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">Password</label>
             <input
               type="password"
               id="password"
@@ -68,22 +69,23 @@ const Login: React.FC = () => {
               onChange={handleChange}
               required
               placeholder="Enter your password"
+              className="twitter-input"
             />
           </div>
 
           <button 
             type="submit" 
-            className="auth-button"
+            className="twitter-btn-primary w-full"
             disabled={loading}
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
+        <div className="text-center mt-6">
+          <p className="text-gray-400">
             Don't have an account?{' '}
-            <Link to="/register" className="auth-link">
+            <Link to="/register" className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>

@@ -58,6 +58,9 @@ tweetSchema.index({ author: 1, createdAt: -1 });
 tweetSchema.index({ hashtags: 1 });
 tweetSchema.index({ createdAt: -1 });
 
+// Text search index
+tweetSchema.index({ content: 'text' });
+
 // Virtual for like count
 tweetSchema.virtual('likeCount').get(function() {
   return this.likes.length;

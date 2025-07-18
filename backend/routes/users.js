@@ -3,6 +3,9 @@ const User = require('../models/User');
 const Tweet = require('../models/Tweet');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const SocialGraphService = require('../services/SocialGraphService');
+const FeedService = require('../services/FeedService');
+const SearchService = require('../services/SearchService');
 
 const router = express.Router();
 
@@ -210,27 +213,95 @@ router.get('/search/:query', async (req, res) => {
     const query = req.params.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    const users = await User.find({
-      $or: [
-        { username: { $regex: query, $options: 'i' } },
-        { displayName: { $regex: query, $options: 'i' } }
-      ]
-    })
-    .select('username displayName avatar bio verified')
-    .skip(skip)
-    .limit(limit);
-
-    res.json({
-      users,
-      query,
-      page,
-      limit
-    });
+    
+    const users = await SearchService.searchUsers(query, page, limit);
+    res.json({ users, query, page, limit });
   } catch (error) {
     console.error('Search users error:', error);
-    res.status(500).json({ message: 'Server error searching users' });
+    res.status(500).json({ message: error.message || 'Server error searching users' });
+  }
+});
+
+// Get suggested users to follow
+router.get('/suggestions/follow', auth, async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const suggestions = await SocialGraphService.getSuggestedUsers(req.user._id, limit);
+    res.json({ suggestions });
+  } catch (error) {
+    console.error('Get suggested users error:', error);
+    res.status(500).json({ message: error.message || 'Server error fetching suggested users' });
+  }
+});
+
+// Get popular users
+router.get('/popular', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const users = await SocialGraphService.getPopularUsers(limit);
+    res.json({ users });
+  } catch (error) {
+    console.error('Get popular users error:', error);
+    res.status(500).json({ message: error.message || 'Server error fetching popular users' });
+  }
+});
+
+// Get user's liked tweets
+router.get('/:username/likes', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    
+    const tweets = await FeedService.getLikedTweets(user._id, page, limit);
+    res.json({ tweets, page, limit });
+  } catch (error) {
+    console.error('Get liked tweets error:', error);
+    res.status(500).json({ message: error.message || 'Server error fetching liked tweets' });
+  }
+});
+
+// Get user's media tweets
+router.get('/:username/media', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    
+    const tweets = await FeedService.getMediaTweets(user._id, page, limit);
+    res.json({ tweets, page, limit });
+  } catch (error) {
+    console.error('Get media tweets error:', error);
+    res.status(500).json({ message: error.message || 'Server error fetching media tweets' });
+  }
+});
+
+// Get user's network analytics
+router.get('/:username/analytics', auth, async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Only allow users to see their own analytics
+    if (user._id.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const analytics = await SocialGraphService.getNetworkAnalytics(user._id);
+    res.json({ analytics });
+  } catch (error) {
+    console.error('Get network analytics error:', error);
+    res.status(500).json({ message: error.message || 'Server error fetching network analytics' });
   }
 });
 

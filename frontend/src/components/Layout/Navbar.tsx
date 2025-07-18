@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { FaTwitter, FaHome, FaUser, FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -12,76 +13,39 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav style={navStyle}>
-      <div style={navContainerStyle}>
-        <Link to="/" style={logoStyle}>
-          Twitter Clone
+    <nav className="h-screen w-20 md:w-64 bg-black border-r border-gray-800 flex flex-col items-center py-6 fixed">
+      <Link to="/" className="mb-8 text-blue-500 text-3xl hover:text-blue-400 transition-colors">
+        <FaTwitter />
+      </Link>
+      <div className="flex flex-col gap-6 flex-1 w-full items-center md:items-start">
+        <Link to="/" className="flex items-center gap-4 text-lg font-semibold text-white hover:bg-gray-900 px-4 py-2 rounded-full transition">
+          <FaHome className="text-xl" />
+          <span className="hidden md:inline">Home</span>
         </Link>
-        
-        <div style={navLinksStyle}>
-          <Link to="/" style={linkStyle}>
-            Home
+        {user && (
+          <Link to={`/profile/${user.username}`} className="flex items-center gap-4 text-lg font-semibold text-white hover:bg-gray-900 px-4 py-2 rounded-full transition">
+            <FaUser className="text-xl" />
+            <span className="hidden md:inline">Profile</span>
           </Link>
-          <Link to="/search" style={linkStyle}>
-            Search
-          </Link>
-          {user && (
-            <Link to={`/profile/${user.username}`} style={linkStyle}>
-              Profile
-            </Link>
-          )}
-          <button onClick={handleLogout} style={logoutButtonStyle}>
-            Logout
-          </button>
-        </div>
+        )}
+        <button onClick={handleLogout} className="flex items-center gap-4 text-lg font-semibold text-white hover:bg-gray-900 px-4 py-2 rounded-full transition">
+          <FaSignOutAlt className="text-xl" />
+          <span className="hidden md:inline">Logout</span>
+        </button>
       </div>
+      {user && (
+        <div className="mt-auto flex flex-col items-center md:items-start w-full px-4">
+          <div className="flex items-center gap-3">
+            <img src={user.avatar || '/default-avatar.png'} alt="avatar" className="w-10 h-10 rounded-full" />
+            <div className="hidden md:block">
+              <div className="font-bold text-white">{user.displayName}</div>
+              <div className="text-gray-400 text-sm">@{user.username}</div>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
-};
-
-const navStyle: React.CSSProperties = {
-  background: '#1da1f2',
-  padding: '1rem 0',
-  position: 'sticky',
-  top: 0,
-  zIndex: 1000,
-};
-
-const navContainerStyle: React.CSSProperties = {
-  maxWidth: '1200px',
-  margin: '0 auto',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '0 2rem',
-};
-
-const logoStyle: React.CSSProperties = {
-  color: 'white',
-  fontSize: '1.5rem',
-  fontWeight: 'bold',
-  textDecoration: 'none',
-};
-
-const navLinksStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '2rem',
-};
-
-const linkStyle: React.CSSProperties = {
-  color: 'white',
-  textDecoration: 'none',
-  fontSize: '1rem',
-};
-
-const logoutButtonStyle: React.CSSProperties = {
-  background: 'transparent',
-  border: '1px solid white',
-  color: 'white',
-  padding: '0.5rem 1rem',
-  borderRadius: '4px',
-  cursor: 'pointer',
 };
 
 export default Navbar;

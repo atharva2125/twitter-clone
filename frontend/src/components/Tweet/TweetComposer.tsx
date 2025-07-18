@@ -46,40 +46,40 @@ const TweetComposer: React.FC<TweetComposerProps> = ({
   const isOverLimit = remainingChars < 0;
 
   return (
-    <div className="tweet-composer">
-      <div className="tweet-composer-header">
-        <div className="user-avatar">
+    <div className="bg-black border border-gray-800 rounded-lg p-4 mb-5">
+      <div className="flex gap-4">
+        <div className="flex-shrink-0">
           {user?.avatar ? (
-            <img src={user.avatar} alt={user.displayName} />
+            <img src={user.avatar} alt={user.displayName} className="w-12 h-12 rounded-full" />
           ) : (
-            <div className="avatar-placeholder">
+            <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold">
               {user?.displayName?.charAt(0)?.toUpperCase()}
             </div>
           )}
         </div>
-        <div className="composer-content">
+        <div className="flex-1">
           <form onSubmit={handleSubmit}>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder={placeholder}
-              className={`tweet-input ${isOverLimit ? 'over-limit' : ''}`}
+              className={`twitter-textarea ${isOverLimit ? 'border-red-500' : ''}`}
               disabled={loading}
               rows={3}
             />
             
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
             
-            <div className="composer-footer">
-              <div className="char-counter">
-                <span className={isOverLimit ? 'over-limit' : ''}>
-                  {remainingChars}
+            <div className="flex justify-between items-center mt-4">
+              <div className="text-sm text-gray-400">
+                <span className={isOverLimit ? 'text-red-400' : ''}>
+                  {remainingChars} characters remaining
                 </span>
               </div>
               
               <button
                 type="submit"
-                className="tweet-button"
+                className="twitter-btn-primary"
                 disabled={loading || !content.trim() || isOverLimit}
               >
                 {loading ? 'Tweeting...' : 'Tweet'}

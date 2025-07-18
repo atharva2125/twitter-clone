@@ -131,87 +131,94 @@ const TweetCard: React.FC<TweetCardProps> = ({
   };
 
   return (
-    <div className="tweet-card">
-      <div className="tweet-header">
-        <div className="user-avatar">
+    <div className="twitter-card border-b border-gray-800">
+      <div className="flex gap-4 p-4">
+        <div className="flex-shrink-0">
           {tweet.author.avatar ? (
-            <img src={tweet.author.avatar} alt={tweet.author.displayName} />
+            <img src={tweet.author.avatar} alt={tweet.author.displayName} className="w-12 h-12 rounded-full" />
           ) : (
-            <div className="avatar-placeholder">
+            <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold">
               {tweet.author.displayName?.charAt(0)?.toUpperCase()}
             </div>
           )}
         </div>
         
-        <div className="tweet-info">
-          <div className="user-info">
-            <Link to={`/profile/${tweet.author.username}`} className="user-link">
-              <span className="display-name">
-                {tweet.author.displayName}
-                {tweet.author.verified && <span className="verified">✓</span>}
-              </span>
-              <span className="username">@{tweet.author.username}</span>
-            </Link>
-            <span className="tweet-date">{formatDate(tweet.createdAt)}</span>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Link to={`/profile/${tweet.author.username}`} className="hover:underline">
+                <span className="font-bold text-white">
+                  {tweet.author.displayName}
+                  {tweet.author.verified && <span className="text-blue-500 ml-1">✓</span>}
+                </span>
+                <span className="text-gray-400 ml-2">@{tweet.author.username}</span>
+              </Link>
+              <span className="text-gray-400">·</span>
+              <span className="text-gray-400">{formatDate(tweet.createdAt)}</span>
+            </div>
+            
+            {user?.id === tweet.author.id && (
+              <button
+                onClick={handleDelete}
+                className="text-gray-400 hover:text-red-400 text-xl font-bold"
+                disabled={loading}
+                title="Delete tweet"
+              >
+                ×
+              </button>
+            )}
           </div>
-          
-          {user?.id === tweet.author.id && (
-            <button
-              onClick={handleDelete}
-              className="delete-button"
-              disabled={loading}
-              title="Delete tweet"
-            >
-              ×
-            </button>
+
+          <div className="mt-2">
+            <p className="text-white whitespace-pre-wrap">{renderContent(tweet.content)}</p>
+          </div>
+
+          {showActions && (
+            <div className="flex items-center gap-6 mt-4">
+              <button
+                onClick={() => {/* TODO: Handle reply */}}
+                className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
+                title="Reply"
+              >
+                <span>💬</span>
+                <span className="text-sm">{tweet.replyCount || 0}</span>
+              </button>
+
+              <button
+                onClick={handleRetweet}
+                className={`flex items-center gap-2 transition-colors ${
+                  isRetweeted ? 'text-green-400' : 'text-gray-400 hover:text-green-400'
+                }`}
+                disabled={loading}
+                title="Retweet"
+              >
+                <span>🔄</span>
+                <span className="text-sm">{retweetCount}</span>
+              </button>
+
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-2 transition-colors ${
+                  isLiked ? 'text-red-400' : 'text-gray-400 hover:text-red-400'
+                }`}
+                disabled={loading}
+                title="Like"
+              >
+                <span>{isLiked ? '❤️' : '🤍'}</span>
+                <span className="text-sm">{likeCount}</span>
+              </button>
+
+              <button
+                onClick={() => {/* TODO: Handle share */}}
+                className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
+                title="Share"
+              >
+                <span>📤</span>
+              </button>
+            </div>
           )}
         </div>
       </div>
-
-      <div className="tweet-content">
-        <p>{renderContent(tweet.content)}</p>
-      </div>
-
-      {showActions && (
-        <div className="tweet-actions">
-          <button
-            onClick={() => {/* TODO: Handle reply */}}
-            className="action-button reply-button"
-            title="Reply"
-          >
-            <span className="action-icon">💬</span>
-            <span className="action-count">{tweet.replyCount || 0}</span>
-          </button>
-
-          <button
-            onClick={handleRetweet}
-            className={`action-button retweet-button ${isRetweeted ? 'active' : ''}`}
-            disabled={loading}
-            title="Retweet"
-          >
-            <span className="action-icon">🔄</span>
-            <span className="action-count">{retweetCount}</span>
-          </button>
-
-          <button
-            onClick={handleLike}
-            className={`action-button like-button ${isLiked ? 'active' : ''}`}
-            disabled={loading}
-            title="Like"
-          >
-            <span className="action-icon">{isLiked ? '❤️' : '🤍'}</span>
-            <span className="action-count">{likeCount}</span>
-          </button>
-
-          <button
-            onClick={() => {/* TODO: Handle share */}}
-            className="action-button share-button"
-            title="Share"
-          >
-            <span className="action-icon">📤</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };

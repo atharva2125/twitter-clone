@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
+  blocked: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   verified: {
     type: Boolean,
     default: false
@@ -52,6 +56,9 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// Text search index
+userSchema.index({ username: 'text', displayName: 'text', bio: 'text' });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {

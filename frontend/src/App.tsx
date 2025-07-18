@@ -7,7 +7,6 @@ import Home from './components/Home/Home';
 import Profile from './components/Profile/Profile';
 import Search from './components/Search/Search';
 import Navbar from './components/Layout/Navbar';
-import './App.css';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -23,21 +22,25 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="App">
+        <div className="bg-black min-h-screen text-white">
           <Routes>
             <Route path="/login" element={
               <PublicRoute>
-                <Login />
+                <div className="bg-black min-h-screen">
+                  <Login />
+                </div>
               </PublicRoute>
             } />
             <Route path="/register" element={
               <PublicRoute>
-                <Register />
+                <div className="bg-black min-h-screen">
+                  <Register />
+                </div>
               </PublicRoute>
             } />
             <Route path="/" element={
               <PrivateRoute>
-                <div className="main-layout">
+                <div className="min-h-screen bg-black flex flex-col">
                   <Navbar />
                   <Home />
                 </div>
@@ -45,7 +48,7 @@ function App() {
             } />
             <Route path="/profile/:username" element={
               <PrivateRoute>
-                <div className="main-layout">
+                <div className="min-h-screen bg-black flex flex-col">
                   <Navbar />
                   <Profile />
                 </div>
@@ -53,7 +56,7 @@ function App() {
             } />
             <Route path="/search" element={
               <PrivateRoute>
-                <div className="main-layout">
+                <div className="min-h-screen bg-black flex flex-col">
                   <Navbar />
                   <Search />
                 </div>

@@ -54,18 +54,18 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Twitter Clone</h1>
-          <h2>Create your account</h2>
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="bg-black border border-gray-800 rounded-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Twitter Clone</h1>
+          <h2 className="text-xl text-gray-400">Create your account</h2>
         </div>
         
-        <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {error && <div className="bg-red-900 text-red-100 p-3 rounded border border-red-800">{error}</div>}
           
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">Username</label>
             <input
               type="text"
               id="username"
@@ -76,11 +76,12 @@ const Register: React.FC = () => {
               placeholder="Choose a username"
               minLength={3}
               maxLength={20}
+              className="twitter-input"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="displayName">Display Name</label>
+          <div>
+            <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
             <input
               type="text"
               id="displayName"
@@ -90,11 +91,12 @@ const Register: React.FC = () => {
               required
               placeholder="Your display name"
               maxLength={50}
+              className="twitter-input"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
             <input
               type="email"
               id="email"
@@ -103,11 +105,12 @@ const Register: React.FC = () => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
+              className="twitter-input"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">Password</label>
             <input
               type="password"
               id="password"
@@ -117,11 +120,12 @@ const Register: React.FC = () => {
               required
               placeholder="Create a password"
               minLength={6}
+              className="twitter-input"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
@@ -130,22 +134,23 @@ const Register: React.FC = () => {
               onChange={handleChange}
               required
               placeholder="Confirm your password"
+              className="twitter-input"
             />
           </div>
 
           <button 
             type="submit" 
-            className="auth-button"
+            className="twitter-btn-primary w-full"
             disabled={loading}
           >
             {loading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
+        <div className="text-center mt-6">
+          <p className="text-gray-400">
             Already have an account?{' '}
-            <Link to="/login" className="auth-link">
+            <Link to="/login" className="text-blue-500 hover:underline">
               Sign in
             </Link>
           </p>
